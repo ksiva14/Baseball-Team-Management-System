@@ -86,6 +86,27 @@ class Player:
         playerList.grid(row=0, column=0, padx=8)
         scrollbar.config(command=playerList.yview)
 
+        #Button Widgets
+        self.btnAdd = Button(ButtonFrame, text="Add Player", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnAdd.grid(row=0, column=0)
+
+        self.btnDisp = Button(ButtonFrame, text="Display", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnDisp.grid(row=0, column=1)
+
+        self.btnClear = Button(ButtonFrame, text="Clear", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnClear.grid(row=0, column=2)
+
+        self.btnDelete = Button(ButtonFrame, text="Delete", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnDelete.grid(row=0, column=3)
+
+        self.btnSearch = Button(ButtonFrame, text="Search", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnSearch.grid(row=0, column=4)
+
+        self.btnUpdate = Button(ButtonFrame, text="Update", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnUpdate.grid(row=0, column=5)
+
+        self.btnExit = Button(ButtonFrame, text="Exit", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnExit.grid(row=0, column=6)
 
 
 
