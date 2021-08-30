@@ -75,7 +75,7 @@ class Player:
 
         self.lblera = Label(DataFrameL, font=('arial', 17, 'bold'), text="ERA:", padx=2, pady=2,bg="Ghost White")
         self.lblera.grid(row=6, column=0, sticky=W)
-        self.txtera = Entry(DataFrameL, font=('arial', 17, 'bold'), textvariable=Batting_Avg, width=39)
+        self.txtera = Entry(DataFrameL, font=('arial', 17, 'bold'), textvariable=ERA, width=39)
         self.txtera.grid(row=6, column=1)
 
         #Button Widget and Scroll Bar
