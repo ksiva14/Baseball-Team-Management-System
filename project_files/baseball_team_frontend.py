@@ -195,10 +195,7 @@ class Player:
         self.btnExit = Button(ButtonFrame, text="Exit", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=iExit)
         self.btnExit.grid(row=0, column=6)
 
-
-
-
-        
+      
 
 if __name__ == '__main__':
     root = Tk()
