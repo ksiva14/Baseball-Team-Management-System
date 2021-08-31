@@ -3,8 +3,12 @@ from tkinter import *
 import tkinter.messagebox
 
 #Backend Database Imports
+import baseball_team_backend
 
+
+#Class for Creating Baseball Player App
 class Player:
+
 
     def __init__(self, root):
         self.root = root
@@ -12,6 +16,7 @@ class Player:
         self.root.geometry("1350x750+0+0")
         self.root.config(bg="cadet blue")
 
+        #Variables to Store user input
         PID = StringVar()
         FirstName = StringVar()
         LastName = StringVar()
@@ -20,7 +25,86 @@ class Player:
         Batting_Avg = StringVar()
         ERA = StringVar()
 
-        #MaineFram Using Widget
+        #FUNCTIONS
+        #Init sql server
+        baseball_team_backend.playerData()
+        #Method to allow user to exit application
+        def iExit():
+            iExit = tkinter.messagebox.askyesno("Baseball Team Database Management System", "Confirm if you want to exit")
+            if iExit:
+                root.destroy()
+                return
+
+        #Clear all data from textbox
+        def clearData():
+            self.txtpid.delete(0, END)
+            self.txtfname.delete(0,END)
+            self.txtlname.delete(0,END)
+            self.txtage.delete(0,END)
+            self.txtpos.delete(0,END)
+            self.txtbavg.delete(0,END)
+            self.txtera.delete(0,END)
+
+        #Add new Player Data
+        def addData():
+            if len(PID.get()) != 0:
+                baseball_team_backend.addPlayerRec(PID.get(), FirstName.get(), LastName.get(), Age.get(), Position.get(), Batting_Avg.get(), ERA.get())
+                playerList.delete(0,END)
+                playerList.insert(END, (PID.get(), FirstName.get(), LastName.get(), Age.get(), Position.get(), Batting_Avg.get(), ERA.get()))
+
+        #Display All the Players so far
+        def displayData():
+            playerList.delete(0,END)
+            for row in baseball_team_backend.view():
+                playerList.insert(END, row, str(""))
+        
+        #Get player info
+        def getPlayer(event):
+            global sd 
+            search = playerList.curselection()[0]
+            sd = playerList.get(search)
+
+            self.txtpid.delete(0, END)
+            self.txtpid.insert(END, sd[1])
+            self.txtfname.delete(0,END)
+            self.txtfname.insert(END, sd[2])
+            self.txtlname.delete(0,END)
+            self.txtlname.insert(END, sd[3])
+            self.txtage.delete(0,END)
+            self.txtage.insert(END, sd[4])
+            self.txtpos.delete(0,END)
+            self.txtpos.insert(END, sd[5])
+            self.txtbavg.delete(0,END)
+            self.txtbavg.insert(END, sd[6])
+            self.txtera.delete(0,END)
+            self.txtera.insert(END, sd[7])
+
+        #Delete a specific player
+        def deleteData():
+            if len(PID.get()) != 0:
+                baseball_team_backend.delete(sd[0])
+                clearData()
+                displayData()
+
+        #Search for specific player
+        def searchData():
+            playerList.delete(0, END)
+            for row in baseball_team_backend.search(PID.get(), FirstName.get(), LastName.get(), Age.get(), Position.get(), Batting_Avg.get(), ERA.get()):
+                playerList.insert(END,row,str(""))
+
+        #Update a player record
+        def updateData():
+            if len(PID.get()) != 0:
+                baseball_team_backend.delete(sd[0])
+            if len(PID.get()) != 0:
+                baseball_team_backend.addPlayerRec(PID.get(), FirstName.get(), LastName.get(), Age.get(), Position.get(), Batting_Avg.get(), ERA.get())
+                playerList.delete(0, END)
+                playerList.insert(END, (PID.get(), FirstName.get(), LastName.get(), Age.get(), Position.get(), Batting_Avg.get(), ERA.get()))
+                
+
+
+        
+        #MaineFrame Using Widget
         MainFrame = Frame(self.root, bg="cadet blue")
         MainFrame.grid()
 
@@ -83,29 +167,32 @@ class Player:
         scrollbar.grid(row=0, column=1, sticky='ns')
 
         playerList = Listbox(DataFrameR, width=41, height=16, font=('arial', 12, 'bold'), yscrollcommand=scrollbar.set)
+        playerList.bind('<<ListboxSelect>>', getPlayer)
         playerList.grid(row=0, column=0, padx=8)
         scrollbar.config(command=playerList.yview)
 
+        
+
         #Button Widgets
-        self.btnAdd = Button(ButtonFrame, text="Add Player", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnAdd = Button(ButtonFrame, text="Add Player", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=addData)
         self.btnAdd.grid(row=0, column=0)
 
-        self.btnDisp = Button(ButtonFrame, text="Display", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnDisp = Button(ButtonFrame, text="Display", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=displayData)
         self.btnDisp.grid(row=0, column=1)
 
-        self.btnClear = Button(ButtonFrame, text="Clear", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnClear = Button(ButtonFrame, text="Clear", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=clearData)
         self.btnClear.grid(row=0, column=2)
 
-        self.btnDelete = Button(ButtonFrame, text="Delete", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnDelete = Button(ButtonFrame, text="Delete", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=deleteData)
         self.btnDelete.grid(row=0, column=3)
 
-        self.btnSearch = Button(ButtonFrame, text="Search", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnSearch = Button(ButtonFrame, text="Search", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=searchData)
         self.btnSearch.grid(row=0, column=4)
 
-        self.btnUpdate = Button(ButtonFrame, text="Update", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnUpdate = Button(ButtonFrame, text="Update", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=updateData)
         self.btnUpdate.grid(row=0, column=5)
 
-        self.btnExit = Button(ButtonFrame, text="Exit", font=('arial', 20, 'bold'), height=1, width=10, bd=4)
+        self.btnExit = Button(ButtonFrame, text="Exit", font=('arial', 20, 'bold'), height=1, width=10, bd=4, command=iExit)
         self.btnExit.grid(row=0, column=6)
 
 
